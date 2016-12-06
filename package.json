@@ -1,0 +1,19 @@
+{
+  "name": "about-electron",
+  "version": "1.0.0",
+  "description": "about window for electron app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JMGonzalezR/about-electron.git"
+  },
+  "author": "Juan M. Gonzalez R.",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JMGonzalezR/about-electron/issues"
+  },
+  "homepage": "https://github.com/JMGonzalezR/about-electron#readme"
+}

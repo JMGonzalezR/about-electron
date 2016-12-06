@@ -1,0 +1,5 @@
+# WebStorm files.
+.idea/*
+!.idea/*.iml
+!.idea/*.name
+!.idea/modules.xml
