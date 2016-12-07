@@ -14,7 +14,7 @@
     "start": "electron ."
   },
   "dependencies": {
-    "about-window": "file:../"
+    "about-electron": "file:../"
   },
   "devDependencies": {
     "electron-prebuilt": "~1.4.0"

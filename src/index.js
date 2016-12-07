@@ -4,11 +4,13 @@
 
 'use strict';
 
-import {app, BrowserWindow, shell} from 'electron';
-import * as path from 'path';
-import {statSync} from 'fs';
 
-let window= BrowserWindow = null;
+const electron = require('electron');
+const path = require('path');
+const fs = require('fs');
+
+
+let window= null;
 
 function loadPackageJson(pkg_pat){
       try {
@@ -28,16 +30,16 @@ function detectPackageJson(specified_dir) {
             }
       }
 
-      const app_name = app.getName();
+      const app_name = electron.app.getName();
 
-      for (let mod_path of (module as any).paths) {
+      for (let mod_path of module.paths) {
             if (!path.isAbsolute(mod_path)) {
                   continue;
             }
 
             const p = path.join(mod_path, '..', 'package.json');
             try {
-                  const stats = statSync(p);
+                  const stats = fs.statSync(p);
                   if (stats.isFile()) {
                         const pkg = loadPackageJson(p);
                         if (pkg !== null && pkg.productName === app_name) {
@@ -80,7 +82,7 @@ function injectInfoFromPackageJson(info) {
       return info;
 }
 
-export default function openAboutWindow(info) {
+function openAboutWindow(info) {
       if (window !== null) {
             window.focus();
             return window;
@@ -99,7 +101,7 @@ export default function openAboutWindow(info) {
           info.win_options || {}
       );
 
-      window = new BrowserWindow(options);
+      window = new electron.BrowserWindow(options);
 
       window.once('closed', () => {
             window = null;
@@ -108,11 +110,11 @@ export default function openAboutWindow(info) {
 
       window.webContents.on('will-navigate', (e, url) => {
             e.preventDefault();
-      shell.openExternal(url);
+      electron.shell.openExternal(url);
 });
       window.webContents.on('new-window', (e, url) => {
             e.preventDefault();
-      shell.openExternal(url);
+      electron.shell.openExternal(url);
 });
 
       window.webContents.once('dom-ready', () => {
@@ -137,3 +139,6 @@ export default function openAboutWindow(info) {
 
       return window;
 }
+
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = openAboutWindow;

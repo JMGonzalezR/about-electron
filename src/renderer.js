@@ -4,16 +4,16 @@
 
 'use strict';
 
-import {shell, ipcRenderer, remote} from 'electron';
+const electron = require('electron');
 
-ipcRenderer.on('about-window:info', (_, info) => {
-      const app_name = remote.app.getName();
-      const open_home = () => shell.openExternal(info.homepage);
+electron.ipcRenderer.on('about-window:info', (_, info) => {
+      const app_name = electron.remote.app.getName();
+      const open_home = () => electron.shell.openExternal(info.homepage);
       const content = info.use_inner_html ? 'innerHTML' : 'innerText';
       document.title = `About ${app_name}`;
 
       const title_elem = document.querySelector('.title') as HTMLHeadingElement;
-      title_elem.innerText = `${app_name} ${remote.app.getVersion()}`;
+      title_elem.innerText = `${app_name} ${electron.remote.app.getVersion()}`;
       title_elem.addEventListener('click', open_home);
 
       if (info.homepage) {
@@ -42,7 +42,7 @@ ipcRenderer.on('about-window:info', (_, info) => {
             bug_report.innerText = 'found bug?';
             bug_report.addEventListener('click', e => {
                   e.preventDefault();
-                  shell.openExternal(info.bug_report_url);
+                  electron.shell.openExternal(info.bug_report_url);
             });
       }
 
@@ -56,7 +56,7 @@ ipcRenderer.on('about-window:info', (_, info) => {
       if (info.adjust_window_size) {
             const height = document.body.scrollHeight;
             const width = document.body.scrollWidth;
-            const win = remote.getCurrentWindow();
+            const win = electron.remote.getCurrentWindow();
             if (height > 0 && width > 0) {
                   // Note:
                   // Add 30px(= about 2em) to add padding in window

@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/JMGonzalezR/about-electron#readme",
   "devDependencies": {
+    "babel-preset-latest": "^6.16.0",
     "electron": "^1.4.10",
     "fs": "0.0.1-security",
     "path": "^0.12.7"
