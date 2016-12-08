@@ -10,7 +10,7 @@ const path = require('path');
 const fs = require('fs');
 
 
-let window= null;
+var window= null;
 
 function loadPackageJson(pkg_pat){
       try {
@@ -32,25 +32,24 @@ function detectPackageJson(specified_dir) {
 
       const app_name = electron.app.getName();
 
-      for (let mod_path of module.paths) {
-            if (!path.isAbsolute(mod_path)) {
-                  continue;
-            }
-
-            const p = path.join(mod_path, '..', 'package.json');
-            try {
-                  const stats = fs.statSync(p);
-                  if (stats.isFile()) {
-                        const pkg = loadPackageJson(p);
-                        if (pkg !== null && pkg.productName === app_name) {
-                              return pkg;
+      module.paths.forEach(function(mod_path){
+            if (path.isAbsolute(mod_path)) {
+                  const p = path.join(mod_path, '..', 'package.json');
+                  try {
+                        const stats = fs.statSync(p);
+                        if (stats.isFile()) {
+                              const pkg = loadPackageJson(p);
+                              if (pkg !== null && pkg.productName === app_name) {
+                                    return pkg;
+                              }
                         }
+                  } catch (e) {
+                        // File not found.  Ignored.
                   }
-            } catch (e) {
-                  // File not found.  Ignored.
             }
-      }
 
+
+      });
       // Note: Not found.
       return null;
 }
@@ -103,21 +102,21 @@ function openAboutWindow(info) {
 
       window = new electron.BrowserWindow(options);
 
-      window.once('closed', () => {
+      window.once('closed', function(){
             window = null;
 });
       window.loadURL(index_html);
 
-      window.webContents.on('will-navigate', (e, url) => {
+      window.webContents.on('will-navigate', function(e, url){
             e.preventDefault();
       electron.shell.openExternal(url);
 });
-      window.webContents.on('new-window', (e, url) => {
+      window.webContents.on('new-window', function(e, url){
             e.preventDefault();
       electron.shell.openExternal(url);
 });
 
-      window.webContents.once('dom-ready', () => {
+      window.webContents.once('dom-ready', function(){
             delete info.win_options;
       window.webContents.send('about-window:info', info);
       if (info.open_devtools) {
@@ -129,7 +128,7 @@ function openAboutWindow(info) {
       }
 });
 
-      window.once('ready-to-show', () => {
+      window.once('ready-to-show', function(){
             window.show();
 });
 

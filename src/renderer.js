@@ -2,18 +2,16 @@
  * @author Juan González <juanmml93@gmail.com>  on 12/7/2016.
  */
 
-'use strict';
-
 const electron = require('electron');
 
-electron.ipcRenderer.on('about-window:info', (_, info) => {
+electron.ipcRenderer.on('about-window:info', function(_, info){
       const app_name = electron.remote.app.getName();
-      const open_home = () => electron.shell.openExternal(info.homepage);
+      const open_home = function(){ electron.shell.openExternal(info.homepage)};
       const content = info.use_inner_html ? 'innerHTML' : 'innerText';
-      document.title = `About ${app_name}`;
+      document.title = "About"+ app_name;
 
-      const title_elem = document.querySelector('.title') as HTMLHeadingElement;
-      title_elem.innerText = `${app_name} ${electron.remote.app.getVersion()}`;
+      const title_elem = document.querySelector('.title');
+      title_elem.innerText = app_name + electron.remote.app.getVersion();
       title_elem.addEventListener('click', open_home);
 
       if (info.homepage) {
@@ -22,25 +20,25 @@ electron.ipcRenderer.on('about-window:info', (_, info) => {
                 .addEventListener('click', open_home);
       }
 
-      const copyright_elem = document.querySelector('.copyright') as any;
+      const copyright_elem = document.querySelector('.copyright');
       if (info.copyright) {
             copyright_elem[content] = info.copyright;
       } else if (info.license) {
-            copyright_elem[content] = `Distrubuted under ${info.license} license.`;
+            copyright_elem[content] = "Distrubuted under" + info.license+" license.";
       }
 
-      const icon_elem = document.getElementById('app-icon') as HTMLImageElement;
+      const icon_elem = document.getElementById('app-icon');
       icon_elem.src = info.icon_path;
 
       if (info.description) {
-            const desc_elem = document.querySelector('.description') as any;
+            const desc_elem = document.querySelector('.description');
             desc_elem[content] = info.description;
       }
 
       if (info.bug_report_url) {
-            const bug_report = document.querySelector('.bug-report-link') as HTMLDivElement;
+            const bug_report = document.querySelector('.bug-report-link');
             bug_report.innerText = 'found bug?';
-            bug_report.addEventListener('click', e => {
+            bug_report.addEventListener('click', function(e){
                   e.preventDefault();
                   electron.shell.openExternal(info.bug_report_url);
             });
@@ -67,7 +65,7 @@ electron.ipcRenderer.on('about-window:info', (_, info) => {
 
 const versions = document.querySelector('.versions');
 const vs = process.versions;
-for (let name of ['electron', 'chrome', 'node', 'v8']) {
+['electron', 'chrome', 'node', 'v8'].forEach(function(name){
       const tr = document.createElement('tr');
       const name_td = document.createElement('td');
       name_td.innerText = name;
@@ -76,4 +74,5 @@ for (let name of ['electron', 'chrome', 'node', 'v8']) {
       version_td.innerText = ' : ' + vs[name];
       tr.appendChild(version_td);
       versions.appendChild(tr);
-}
+});
+
